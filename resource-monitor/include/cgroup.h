@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <sys/types.h> // para pid_t
 
 int read_cgroup_metrics(const char *cgroup_path, FILE *out);
 int create_cgroup(const char *name);
