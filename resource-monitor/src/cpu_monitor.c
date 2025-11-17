@@ -1,3 +1,4 @@
+#include <sys/types.h> // para pid_t
 #include "monitor.h"
 #include <stdio.h>
 #include <stdlib.h>

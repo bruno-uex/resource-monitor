@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/types.h> // para pid_t
+#include <sys/stat.h>  // para mkdir
+#include <errno.h>     // para errno/EEXIST
 
 int read_cgroup_metrics(const char *cgroup_path, FILE *out) {
     char stat_path[128];
