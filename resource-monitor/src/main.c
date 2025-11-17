@@ -6,28 +6,23 @@
 #include "namespace.h"
 #include "cgroup.h"
 
-void print_usage() {
-    printf("Resource Monitor\n");
-    printf("Uso:\n");
-    printf("  --profile <PID>\n");
-    printf("  --profile <PID> --csv <arquivo>  Exporta métricas em CSV\n");
-    printf("  --namespace <PID>\n");
-    printf("  --compare-ns <PID1> <PID2>\n");
-    printf("  --cgroup <cgroup_path>\n");
-}
-
 int main(int argc, char *argv[]) {
-    if (argc < 2 || strcmp(argv[1], "--help") == 0) {
+    if (argc < 2) {
+        fprintf(stderr, "Erro: argumentos insuficientes.\n");
         print_usage();
         return 0;
     }
     if (strcmp(argv[1], "--profile") == 0 && (argc == 3 || (argc == 5 && strcmp(argv[3], "--csv") == 0))) {
         pid_t pid = atoi(argv[2]);
+        if (pid <= 0) {
+            fprintf(stderr, "Erro: PID inválido.\n");
+            return 2;
+        }
         FILE *out = stdout;
         int to_csv = 0;
         if (argc == 5 && strcmp(argv[3], "--csv") == 0) {
             out = fopen(argv[4], "w");
-            if (!out) { perror("fopen"); return 2; }
+            if (!out) { perror("fopen"); return 3; }
             to_csv = 1;
         }
         if (to_csv) fprintf(out, "utime,stime,threads,VmRSS,VmSize,read_bytes,write_bytes\n");
@@ -80,14 +75,23 @@ int main(int argc, char *argv[]) {
         if (out != stdout) fclose(out);
     } else if (strcmp(argv[1], "--namespace") == 0 && argc == 3) {
         pid_t pid = atoi(argv[2]);
+        if (pid <= 0) {
+            fprintf(stderr, "Erro: PID inválido.\n");
+            return 2;
+        }
         list_namespaces(pid, stdout);
     } else if (strcmp(argv[1], "--compare-ns") == 0 && argc == 4) {
         pid_t pid1 = atoi(argv[2]);
         pid_t pid2 = atoi(argv[3]);
+        if (pid1 <= 0 || pid2 <= 0) {
+            fprintf(stderr, "Erro: PID(s) inválido(s).\n");
+            return 2;
+        }
         compare_namespaces(pid1, pid2, stdout);
     } else if (strcmp(argv[1], "--cgroup") == 0 && argc == 3) {
         read_cgroup_metrics(argv[2], stdout);
     } else {
+        fprintf(stderr, "Erro: argumentos inválidos ou uso incorreto.\n");
         print_usage();
         return 1;
     }
