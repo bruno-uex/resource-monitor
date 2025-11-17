@@ -17,9 +17,9 @@ void print_usage() {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
+    if (argc < 2 || strcmp(argv[1], "--help") == 0) {
         print_usage();
-        return 1;
+        return 0;
     }
     if (strcmp(argv[1], "--profile") == 0 && (argc == 3 || (argc == 5 && strcmp(argv[3], "--csv") == 0))) {
         pid_t pid = atoi(argv[2]);
