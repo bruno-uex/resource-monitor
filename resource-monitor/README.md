@@ -12,19 +12,48 @@ Ferramenta para profiling, análise de namespaces e gerenciamento de cgroups em 
 
 ## Compilação
 
+Requer GCC (C23) e ambiente Linux com acesso a `/proc` e `/sys/fs/cgroup`.
+
 ```sh
 make
 ```
 
 ## Uso
 
-Veja detalhes de cada ferramenta e exemplos de uso no README final.
+### Coletar métricas de um processo
+```sh
+./resource-monitor --profile <PID>
+```
 
-## Dependências
+### Analisar namespaces de um processo
+```sh
+./resource-monitor --namespace <PID>
+```
 
-- Compilador C/C++ (gcc/g++)
-- Linux (acesso a /proc, /sys/fs/cgroup)
+### Comparar namespaces entre dois processos
+```sh
+./resource-monitor --compare-ns <PID1> <PID2>
+```
+
+### Ler métricas de um cgroup
+```sh
+./resource-monitor --cgroup <caminho_cgroup>
+```
+
+## Testes
+
+```sh
+make test
+./tests/test_cpu
+./tests/test_memory
+./tests/test_io
+```
+
+## Scripts Auxiliares
+
+- `scripts/visualize.py`: Visualização de métricas (requer Python, pandas, matplotlib)
+- `scripts/compare_tools.sh`: Comparação com ferramentas externas
 
 ## Autoria
 
-Desenvolvido por Bruno Horning para fins acadêmicos.
+Desenvolvido por Bruno Horning para fins acadêmicos. Proibida a cópia ou uso não autorizado.
