@@ -21,9 +21,15 @@ int read_cgroup_metrics(const char *cgroup_path, FILE *out) {
 }
 
 int create_cgroup(const char *name) {
-    char cmd[256];
-    snprintf(cmd, sizeof(cmd), "mkdir -p /sys/fs/cgroup/%s", name);
-    return system(cmd);
+    char path[256];
+    snprintf(path, sizeof(path), "/sys/fs/cgroup/%s", name);
+    // Tenta criar o diretório do cgroup
+    int ret = mkdir(path, 0755);
+    if (ret == -1 && errno != EEXIST) {
+        perror("Erro ao criar cgroup");
+        return -1;
+    }
+    return 0;
 }
 
 int move_process_to_cgroup(pid_t pid, const char *cgroup_path) {
