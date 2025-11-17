@@ -9,16 +9,17 @@
 void print_usage() {
     printf("Resource Monitor\n");
     printf("Uso:\n");
-    printf("  --profile <PID>\n");
-    printf("  --namespace <PID>\n");
-    printf("  --compare-ns <PID1> <PID2>\n");
-    printf("  --cgroup <cgroup_path>\n");
+    printf("  --profile <PID>         Coleta métricas de CPU, memória e I/O do processo\n");
+    printf("  --namespace <PID>       Lista namespaces do processo\n");
+    printf("  --compare-ns <PID1> <PID2>  Compara namespaces entre dois processos\n");
+    printf("  --cgroup <cgroup_path>  Lê métricas do cgroup\n");
+    printf("  --help                  Mostra esta mensagem\n");
 }
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
+    if (argc < 2 || strcmp(argv[1], "--help") == 0) {
         print_usage();
-        return 1;
+        return 0;
     }
     if (strcmp(argv[1], "--profile") == 0 && argc == 3) {
         pid_t pid = atoi(argv[2]);
